@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening...</title>
+
+    <!-- Social metadata filled dynamically -->
+    <meta id="meta-description" name="description" content="">
+    <meta id="og-title" property="og:title" content="">
+    <meta id="og-description" property="og:description" content="">
+    <meta id="og-image" property="og:image" content="">
+    <meta id="ios-app-banner" name="apple-itunes-app" content="">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --surface: rgba(30, 41, 59, 0.7);
+            --primary: #FF9933;
+            --primary-glow: rgba(255, 153, 51, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0; padding: 0;
+            background: radial-gradient(circle at 0% 0%, #1e293b 0%, #0f172a 100%);
+            background-color: var(--bg-dark);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); overflow-x: hidden;
+        }
+
+        .background-blobs { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; overflow: hidden; }
+        .blob { position: absolute; width: 300px; height: 300px; background: var(--primary); filter: blur(120px); opacity: 0.15; border-radius: 50%; }
+        .blob-1 { top: -100px; right: -100px; }
+        .blob-2 { bottom: -100px; left: -100px; background: #6366f1; }
+
+        .preview-card {
+            width: 100%; max-width: 440px;
+            background: var(--surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border); border-radius: 32px; padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); margin: 20px;
+            animation: slideUp 0.6s cubic-bezier(0.16,1,0.3,1); text-align: center;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        .app-header { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 32px; }
+        .app-icon {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #FF9933 0%, #FF6600 100%);
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 700; color: white;
+            box-shadow: 0 8px 16px var(--primary-glow);
+        }
+        .app-info { text-align: left; }
+        .app-name { display: block; font-size: 18px; font-weight: 700; color: var(--text-main); }
+        .app-status { font-size: 13px; color: var(--text-muted); }
+
+        .content-preview {
+            margin-bottom: 32px; border-radius: 20px; overflow: hidden;
+            background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
+        }
+        .preview-image { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .preview-text { padding: 20px; text-align: left; }
+        .preview-title {
+            font-size: 20px; font-weight: 600; margin: 0 0 8px 0; color: var(--text-main);
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .preview-desc {
+            font-size: 15px; color: var(--text-muted); margin: 0; line-height: 1.5;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .btn-open {
+            width: 100%; padding: 18px;
+            background: linear-gradient(135deg, #FF9933 0%, #FF8000 100%);
+            border: none; border-radius: 18px; color: white;
+            font-size: 16px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer;
+            transition: all 0.3s; box-shadow: 0 10px 20px -5px var(--primary-glow);
+            margin-bottom: 12px; text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-open:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px var(--primary-glow); filter: brightness(1.1); }
+        .btn-open:active { transform: translateY(0); }
+
+        .secondary-actions { margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .link-web { color: var(--primary); text-decoration: none; font-weight: 500; font-size: 14px; }
+        .link-web:hover { text-decoration: underline; }
+
+        .loader {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+            display: none; margin-right: 8px; vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .is-loading .loader { display: inline-block; }
+        .is-loading .btn-label { display: none; }
+
+        .loading-state { text-align: center; color: var(--text-muted); padding: 40px 0; }
+        .error-state { text-align: center; color: #f87171; padding: 40px 0; }
+        [hidden] { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="preview-card">
+        <div id="loading-state" class="loading-state">Loading...</div>
+        <div id="error-state" class="error-state" hidden>Link not found.</div>
+
+        <div id="content" hidden>
+            <header class="app-header">
+                <div class="app-icon" id="app-icon">S</div>
+                <div class="app-info">
+                    <span class="app-name" id="app-name">Saral Links</span>
+                    <span class="app-status">Deep Link Preview</span>
+                </div>
+            </header>
+
+            <div class="content-preview">
+                <img id="preview-image" class="preview-image" src="" alt="Preview" hidden>
+                <div class="preview-text">
+                    <h1 class="preview-title" id="preview-title"></h1>
+                    <p class="preview-desc" id="preview-desc"></p>
+                </div>
+            </div>
+
+            <button id="open-btn" class="btn-open">
+                <div class="loader"></div>
+                <span class="btn-label">OPEN</span>
+            </button>
+
+            <div class="secondary-actions" id="store-actions"></div>
+        </div>
+    </div>
+
+    <script>
+        var params = new URLSearchParams(window.location.search);
+        var code   = params.get('code');
+        var base   = params.get('base'); // e.g. https://staging.bjpsrl.in
+
+        var isAndroid = /android/i.test(navigator.userAgent);
+        var isIOS     = /iphone|ipad|ipod|crios/i.test(navigator.userAgent);
+
+        var linkData = null;
+
+        function showError() {
+            document.getElementById('loading-state').hidden = true;
+            document.getElementById('error-state').hidden = false;
+        }
+
+        function render(data) {
+            linkData = data;
+
+            document.getElementById('loading-state').hidden = true;
+            document.getElementById('content').hidden = false;
+
+            // Metadata
+            document.title = data.title || 'Opening...';
+            document.getElementById('preview-title').textContent = data.title || '';
+            document.getElementById('preview-desc').textContent  = data.description || '';
+
+            if (data.image_url) {
+                var img = document.getElementById('preview-image');
+                img.src = data.image_url;
+                img.hidden = false;
+            }
+
+            // App icon / name
+            if (data.project_name) {
+                document.getElementById('app-icon').textContent = data.project_name.charAt(0).toUpperCase();
+                document.getElementById('app-name').textContent = data.project_name;
+            }
+
+            // iOS Smart App Banner — uses redirect_url so Safari's native banner also works
+            if (data.ios_app_id && data.redirect_url) {
+                document.getElementById('ios-app-banner').setAttribute('content',
+                    'app-id=' + data.ios_app_id + ', app-argument=' + data.redirect_url);
+            }
+
+            // Store buttons (shown as fallback)
+            var storeActions = document.getElementById('store-actions');
+            if (data.ios_store_url) {
+                var a = document.createElement('a');
+                a.href = data.ios_store_url;
+                a.className = 'btn-open';
+                a.style.background = '#000';
+                a.textContent = 'Download on App Store';
+                storeActions.appendChild(a);
+            }
+            if (data.android_store_url) {
+                var a2 = document.createElement('a');
+                a2.href = data.android_store_url;
+                a2.className = 'btn-open';
+                a2.style.background = '#3DDC84';
+                a2.style.color = 'black';
+                a2.textContent = 'Get it on Play Store';
+                storeActions.appendChild(a2);
+            }
+            if (data.redirect_url) {
+                var a3 = document.createElement('a');
+                a3.href = data.redirect_url;
+                a3.className = 'link-web';
+                a3.textContent = 'Continue to website';
+                storeActions.appendChild(a3);
+            }
+        }
+
+        function triggerOpen(e) {
+            e.preventDefault();
+            if (!linkData) return;
+
+            var btn = document.getElementById('open-btn');
+            btn.classList.add('is-loading');
+
+            // Android: use Intent URL (browser_fallback_url embedded, Chrome handles natively)
+            if (isAndroid && linkData.app_url && linkData.app_url.startsWith('intent://')) {
+                window.location.href = linkData.app_url;
+                return;
+            }
+
+            // iOS: navigate to redirect_url — iOS intercepts as Universal Link (cross-domain from github.io)
+            // This triggers continue(userActivity:) in the app, which navigates to the correct screen.
+            if (isIOS && linkData.redirect_url) {
+                window.location.href = linkData.redirect_url;
+
+                var fallbackTimer = setTimeout(function() {
+                    window.location.replace(linkData.ios_store_url || linkData.short_code_url);
+                }, 1500);
+
+                document.addEventListener('visibilitychange', function onVisibility() {
+                    if (document.hidden) {
+                        clearTimeout(fallbackTimer);
+                        document.removeEventListener('visibilitychange', onVisibility);
+                    }
+                });
+                return;
+            }
+
+            // Fallback
+            window.location.href = linkData.redirect_url || linkData.short_code_url;
+        }
+
+        document.getElementById('open-btn').addEventListener('click', triggerOpen);
+
+        // Fetch link details
+        if (!code || !base) {
+            showError();
+        } else {
+            fetch(base + '/p/' + code)
+                .then(function(res) {
+                    if (!res.ok) throw new Error('not found');
+                    return res.json();
+                })
+                .then(function(json) {
+                    if (json.success && json.data) {
+                        render(json.data);
+                    } else {
+                        showError();
+                    }
+                })
+                .catch(function() {
+                    showError();
+                });
+        }
+    </script>
+</body>
+</html>
