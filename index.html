@@ -140,10 +140,15 @@
         var code = p.get('code');
         var base = p.get('base'); // e.g. https://staging.bjpsrl.in
 
+        var ua      = navigator.userAgent || '';
+        var isIOS   = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+        var isAndroid = /Android/.test(ua);
+
         function render(data) {
-            var redirectURL = data.redirect_url || '';
-            var iosStore    = data.ios_store_url || '';
-            var iosAppID    = data.ios_app_id   || '';
+            var redirectURL     = data.redirect_url      || '';
+            var iosStore        = data.ios_store_url     || '';
+            var androidStore    = data.android_store_url || '';
+            var iosAppID        = data.ios_app_id        || '';
 
             document.title = data.title || 'Opening...';
             document.getElementById('preview-title').textContent = data.title || '';
@@ -165,6 +170,10 @@
                     'app-id=' + iosAppID + ', app-argument=' + redirectURL);
             }
 
+            // Resolve the store URL relevant to the current platform
+            var storeURL = isIOS ? iosStore : (isAndroid ? androidStore : (iosStore || androidStore));
+            var storeBtnText = isIOS ? 'Download on App Store' : (isAndroid ? 'Get it on Google Play' : 'Download App');
+
             // Show "Open App" button — user tap triggers Universal Link (requires user gesture on iOS).
             // Use base/code as the href so iOS intercepts it as a Universal Link and the app
             // handles navigation internally. redirectURL (custom scheme) won't trigger Universal Links.
@@ -174,28 +183,14 @@
                 openBtn.className = 'btn-open';
                 openBtn.textContent = 'Open App';
                 openBtn.addEventListener('click', function() {
-                    // After tap, show App Store fallback in case app is not installed
-                    setTimeout(function() {
-                        var storeActions = document.getElementById('store-actions');
-                        storeActions.hidden = false;
-
-                        if (iosStore) {
-                            var a = document.createElement('a');
-                            a.href = iosStore;
-                            a.className = 'btn-open';
-                            a.style.background = '#000';
-                            a.textContent = 'Download on App Store';
-                            storeActions.appendChild(a);
-                        }
-                        var a2 = document.createElement('a');
-                        a2.href = redirectURL;
-                        a2.className = 'link-web';
-                        a2.textContent = 'Continue to website';
-                        storeActions.appendChild(a2);
+                    var fallbackTimer = setTimeout(function() {
+                        showFallback(storeURL, storeBtnText, redirectURL);
                     }, 1500);
 
+                    // App opened successfully — page goes hidden; cancel the fallback
                     document.addEventListener('visibilitychange', function onHide() {
                         if (document.hidden) {
+                            clearTimeout(fallbackTimer);
                             document.removeEventListener('visibilitychange', onHide);
                         }
                     });
@@ -204,6 +199,28 @@
                 var storeActions = document.getElementById('store-actions');
                 storeActions.hidden = false;
                 storeActions.insertBefore(openBtn, storeActions.firstChild);
+            }
+        }
+
+        function showFallback(storeURL, storeBtnText, redirectURL) {
+            var storeActions = document.getElementById('store-actions');
+            storeActions.hidden = false;
+
+            if (storeURL) {
+                var a = document.createElement('a');
+                a.href = storeURL;
+                a.className = 'btn-open';
+                a.style.background = '#000';
+                a.textContent = storeBtnText;
+                storeActions.appendChild(a);
+            }
+
+            if (redirectURL) {
+                var a2 = document.createElement('a');
+                a2.href = redirectURL;
+                a2.className = 'link-web';
+                a2.textContent = 'Continue to website';
+                storeActions.appendChild(a2);
             }
         }
 
