@@ -165,10 +165,12 @@
                     'app-id=' + iosAppID + ', app-argument=' + redirectURL);
             }
 
-            // Show "Open App" button — user tap triggers Universal Link (requires user gesture on iOS)
-            if (redirectURL) {
+            // Show "Open App" button — user tap triggers Universal Link (requires user gesture on iOS).
+            // Use base/code as the href so iOS intercepts it as a Universal Link and the app
+            // handles navigation internally. redirectURL (custom scheme) won't trigger Universal Links.
+            if (universalLinkURL) {
                 var openBtn = document.createElement('a');
-                openBtn.href = redirectURL;
+                openBtn.href = universalLinkURL;
                 openBtn.className = 'btn-open';
                 openBtn.textContent = 'Open App';
                 openBtn.addEventListener('click', function() {
@@ -204,6 +206,9 @@
                 storeActions.insertBefore(openBtn, storeActions.firstChild);
             }
         }
+
+        // The Universal Link URL — tapping this from github.io triggers iOS to open the app
+        var universalLinkURL = (base && code) ? (base + '/' + code) : '';
 
         if (code && base) {
             fetch(base + '/api/preview/' + code)
