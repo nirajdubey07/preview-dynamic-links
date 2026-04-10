@@ -146,6 +146,7 @@
 
         function render(data) {
             var redirectURL     = data.redirect_url      || '';
+            var appURL          = data.app_url           || '';
             var iosStore        = data.ios_store_url     || '';
             var androidStore    = data.android_store_url || '';
             var iosAppID        = data.ios_app_id        || '';
@@ -170,24 +171,29 @@
                     'app-id=' + iosAppID + ', app-argument=' + redirectURL);
             }
 
-            // Resolve the store URL relevant to the current platform
-            var storeURL = isIOS ? iosStore : (isAndroid ? androidStore : (iosStore || androidStore));
+            var storeURL     = isIOS ? iosStore : (isAndroid ? androidStore : (iosStore || androidStore));
             var storeBtnText = isIOS ? 'Download on App Store' : (isAndroid ? 'Get it on Google Play' : 'Download App');
 
-            // Show "Open App" button — user tap triggers Universal Link (requires user gesture on iOS).
-            // Use base/code as the href so iOS intercepts it as a Universal Link and the app
-            // handles navigation internally. redirectURL (custom scheme) won't trigger Universal Links.
-            if (universalLinkURL) {
+            // iOS: use universalLinkURL + ?nr=1 so if app is not installed and Safari falls
+            //      back to opening bjpsrl.in/code, redirect.html won't loop back here.
+            // Android: use appURL (Intent URL) so Chrome opens the app or goes to Play Store natively.
+            var openHref = isAndroid
+                ? (appURL || universalLinkURL)
+                : (universalLinkURL ? universalLinkURL + '?nr=1' : '');
+
+            if (openHref) {
                 var openBtn = document.createElement('a');
-                openBtn.href = universalLinkURL;
+                openBtn.href = openHref;
                 openBtn.className = 'btn-open';
                 openBtn.textContent = 'Open App';
                 openBtn.addEventListener('click', function() {
+                    // Show fallback after delay in case app is not installed
+                    var delay = isAndroid ? 2000 : 1500;
                     var fallbackTimer = setTimeout(function() {
                         showFallback(storeURL, storeBtnText, redirectURL);
-                    }, 1500);
+                    }, delay);
 
-                    // App opened successfully — page goes hidden; cancel the fallback
+                    // App opened — page goes hidden; cancel the fallback
                     document.addEventListener('visibilitychange', function onHide() {
                         if (document.hidden) {
                             clearTimeout(fallbackTimer);
