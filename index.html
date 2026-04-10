@@ -6,141 +6,194 @@
     <title>Opening...</title>
     <meta id="ios-app-banner" name="apple-itunes-app" content="">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --surface: rgba(30, 41, 59, 0.7);
-            --primary: #FF9933;
-            --primary-glow: rgba(255, 153, 51, 0.4);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0; padding: 0;
-            background: radial-gradient(circle at 0% 0%, #1e293b 0%, #0f172a 100%);
-            background-color: var(--bg-dark);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f7;
             min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-main); overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .background-blobs { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; overflow: hidden; }
-        .blob { position: absolute; width: 300px; height: 300px; background: var(--primary); filter: blur(120px); opacity: 0.15; border-radius: 50%; }
-        .blob-1 { top: -100px; right: -100px; }
-        .blob-2 { bottom: -100px; left: -100px; background: #6366f1; }
-
-        .preview-card {
-            width: 100%; max-width: 440px;
-            background: var(--surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border); border-radius: 32px; padding: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); margin: 20px;
-            animation: slideUp 0.6s cubic-bezier(0.16,1,0.3,1); text-align: center;
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06);
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: #e5e5ea;
+        }
 
-        .app-header { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 32px; }
+        .body {
+            padding: 28px 24px 24px;
+        }
+
+        .app-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
         .app-icon {
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, #FF9933 0%, #FF6600 100%);
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 700; color: white;
-            box-shadow: 0 8px 16px var(--primary-glow);
-        }
-        .app-info { text-align: left; }
-        .app-name { display: block; font-size: 18px; font-weight: 700; color: var(--text-main); }
-        .app-status { font-size: 13px; color: var(--text-muted); }
-
-        .content-preview {
-            margin-bottom: 32px; border-radius: 20px; overflow: hidden;
-            background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);
-        }
-        .preview-image { width: 100%; height: 200px; object-fit: cover; display: block; }
-        .preview-text { padding: 20px; text-align: left; }
-        .preview-title {
-            font-size: 20px; font-weight: 600; margin: 0 0 8px 0; color: var(--text-main);
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .preview-desc {
-            font-size: 15px; color: var(--text-muted); margin: 0; line-height: 1.5;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #1d1d1f;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            letter-spacing: -0.5px;
         }
 
-        .btn-open {
-            width: 100%; padding: 18px;
-            background: linear-gradient(135deg, #FF9933 0%, #FF8000 100%);
-            border: none; border-radius: 18px; color: white;
-            font-size: 16px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer;
-            transition: all 0.3s; box-shadow: 0 10px 20px -5px var(--primary-glow);
-            margin-bottom: 12px; text-decoration: none;
-            display: flex; align-items: center; justify-content: center;
+        .app-meta {
+            min-width: 0;
         }
-        .btn-open:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px var(--primary-glow); filter: brightness(1.1); }
-        .btn-open:active { transform: translateY(0); }
 
-        .secondary-actions { margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
-        .link-web { color: var(--primary); text-decoration: none; font-weight: 500; font-size: 14px; }
-        .link-web:hover { text-decoration: underline; }
-
-        .loader {
-            width: 20px; height: 20px;
-            border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-            display: none; margin-right: 8px; vertical-align: middle;
+        .app-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1d1d1f;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .is-loading .loader { display: inline-block; }
-        .is-loading .btn-label { display: none; }
 
-        .loading-state { text-align: center; color: var(--text-muted); padding: 40px 0; }
-        .error-state { text-align: center; color: #f87171; padding: 40px 0; }
+        .app-label {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-top: 1px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #f2f2f7;
+            margin-bottom: 20px;
+        }
+
+        .content-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .content-desc {
+            font-size: 14px;
+            color: #6e6e73;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-clamp: 2;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #1d1d1f;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-primary:active { opacity: 0.75; }
+
+        .btn-store {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #f2f2f7;
+            color: #1d1d1f;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-store:active { background: #e5e5ea; }
+
+        .link-web {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            font-size: 13px;
+            color: #8e8e93;
+            text-decoration: none;
+        }
+
+        .link-web:hover { color: #1d1d1f; }
+
+        .actions { display: flex; flex-direction: column; gap: 10px; }
+
         [hidden] { display: none !important; }
     </style>
 </head>
 <body>
-    <div class="background-blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-    </div>
+    <div class="card">
+        <img id="preview-image" class="preview-image" src="" alt="" hidden>
 
-    <div class="preview-card">
-        <div id="content">
-            <header class="app-header">
+        <div class="body">
+            <div class="app-row">
                 <div class="app-icon" id="app-icon">S</div>
-                <div class="app-info">
-                    <span class="app-name" id="app-name">Saral Links</span>
-                    <span class="app-status">Opening app...</span>
-                </div>
-            </header>
-
-            <div class="content-preview">
-                <img id="preview-image" class="preview-image" src="" alt="Preview" hidden>
-                <div class="preview-text">
-                    <h1 class="preview-title" id="preview-title"></h1>
-                    <p class="preview-desc" id="preview-desc"></p>
+                <div class="app-meta">
+                    <div class="app-name" id="app-name">App</div>
+                    <div class="app-label">Open in app</div>
                 </div>
             </div>
 
-            <!-- Shown only if app is not installed (after fallback timeout) -->
-            <div class="secondary-actions" id="store-actions" hidden></div>
+            <div class="divider"></div>
+
+            <div class="content-title" id="preview-title"></div>
+            <div class="content-desc" id="preview-desc"></div>
+
+            <div class="actions" id="store-actions"></div>
         </div>
     </div>
 
     <script>
         var p    = new URLSearchParams(window.location.search);
         var code = p.get('code');
-        var base = p.get('base'); // e.g. https://staging.bjpsrl.in
-
-        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '') && !window.MSStream;
+        var base = p.get('base');
 
         function render(data) {
             var redirectURL = data.redirect_url  || '';
@@ -148,12 +201,20 @@
             var iosAppID    = data.ios_app_id    || '';
 
             document.title = data.title || 'Opening...';
-            document.getElementById('preview-title').textContent = data.title || '';
-            document.getElementById('preview-desc').textContent  = data.description || '';
+
+            var titleEl = document.getElementById('preview-title');
+            var descEl  = document.getElementById('preview-desc');
+            titleEl.textContent = data.title       || '';
+            descEl.textContent  = data.description || '';
+
+            if (!data.title && !data.description) {
+                titleEl.style.display = 'none';
+                descEl.style.display  = 'none';
+            }
 
             if (data.image_url) {
                 var img = document.getElementById('preview-image');
-                img.src = data.image_url;
+                img.src    = data.image_url;
                 img.hidden = false;
             }
 
@@ -167,68 +228,66 @@
                     'app-id=' + iosAppID + ', app-argument=' + redirectURL);
             }
 
-            // This page is only shown to iOS users — Android is handled server-side.
-            // If app is not installed, Safari falls back to opening yourserver.com/code;
-            // ?nr=1 tells the server not to loop back to this preview page.
+            // Universal Link URL — tapping from github.io triggers iOS to open the app.
+            // ?nr=1 tells the server not to loop back here if app is not installed.
             var openHref = universalLinkURL ? universalLinkURL + '?nr=1' : '';
+            var storeActions = document.getElementById('store-actions');
 
             if (openHref) {
                 var openBtn = document.createElement('a');
-                openBtn.href = openHref;
-                openBtn.className = 'btn-open';
+                openBtn.href      = openHref;
+                openBtn.className = 'btn-primary';
                 openBtn.textContent = 'Open App';
                 openBtn.addEventListener('click', function() {
                     var appOpened = false;
                     var fallbackTimer = setTimeout(function() {
-                        if (!appOpened) {
-                            showFallback(iosStore, 'Download on App Store', redirectURL);
-                        }
+                        if (!appOpened) showFallback(iosStore, redirectURL);
                     }, 1500);
 
-                    // Track visibility changes to detect whether the app opened.
-                    // hidden  → app launched (or user switched tabs) — mark appOpened and cancel timer.
-                    // visible → user returned from app — timer already cancelled, do nothing.
                     document.addEventListener('visibilitychange', function onVisibility() {
                         if (document.hidden) {
                             appOpened = true;
                             clearTimeout(fallbackTimer);
                         }
-                        // Once visible again after app opened, remove the listener — we're done.
                         if (!document.hidden && appOpened) {
                             document.removeEventListener('visibilitychange', onVisibility);
                         }
                     });
                 });
+                storeActions.appendChild(openBtn);
+            }
 
-                var storeActions = document.getElementById('store-actions');
-                storeActions.hidden = false;
-                storeActions.insertBefore(openBtn, storeActions.firstChild);
+            if (redirectURL) {
+                var webLink = document.createElement('a');
+                webLink.href        = redirectURL;
+                webLink.className   = 'link-web';
+                webLink.textContent = 'Continue in browser';
+                storeActions.appendChild(webLink);
             }
         }
 
-        function showFallback(storeURL, storeBtnText, redirectURL) {
+        function showFallback(storeURL, redirectURL) {
             var storeActions = document.getElementById('store-actions');
-            storeActions.hidden = false;
+            // Clear existing buttons
+            storeActions.innerHTML = '';
 
             if (storeURL) {
                 var a = document.createElement('a');
-                a.href = storeURL;
-                a.className = 'btn-open';
-                a.style.background = '#000';
-                a.textContent = storeBtnText;
+                a.href        = storeURL;
+                a.className   = 'btn-primary';
+                a.textContent = 'Download on App Store';
                 storeActions.appendChild(a);
             }
 
             if (redirectURL) {
                 var a2 = document.createElement('a');
-                a2.href = redirectURL;
-                a2.className = 'link-web';
-                a2.textContent = 'Continue to website';
+                a2.href        = redirectURL;
+                a2.className   = 'link-web';
+                a2.textContent = 'Continue in browser';
                 storeActions.appendChild(a2);
             }
         }
 
-        // The Universal Link URL — tapping this from github.io triggers iOS to open the app
         var universalLinkURL = (base && code) ? (base + '/' + code) : '';
 
         if (code && base) {
@@ -241,3 +300,4 @@
     </script>
 </body>
 </html>
+
