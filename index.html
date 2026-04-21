@@ -210,6 +210,7 @@
                 };
             } else {
                 loader.style.display = 'none';
+                document.querySelector('.hero-section').style.display = 'none';
             }
 
             if (iosAppID && redirectURL) {
@@ -222,27 +223,15 @@
             
             openBtn.href = openHref;
             
+            // By NOT calling e.preventDefault(), we allow the browser to handle the 
+            // Universal Link naturally, which is the only way to bypass the 
+            // "Open in 'App'?" system prompt on iOS and Android.
             openBtn.addEventListener('click', function(e) {
-                if (!universalLinkURL) return; // Follow redirectURL normally
-                
-                e.preventDefault();
-                var appOpened = false;
-                var fallbackTimer = setTimeout(function() {
-                    if (!appOpened) {
-                        window.location.href = iosStore || redirectURL;
-                    }
-                }, 1500);
+                // If we're already using a Universal Link (HTTPS), let the browser do its thing.
+                if (universalLinkURL) return; 
 
-                document.addEventListener('visibilitychange', function onVisibility() {
-                    if (document.hidden) {
-                        appOpened = true;
-                        clearTimeout(fallbackTimer);
-                    }
-                    if (!document.hidden && appOpened) {
-                        document.removeEventListener('visibilitychange', onVisibility);
-                    }
-                });
-                
+                // Fallback for custom schemes or other redirects
+                e.preventDefault();
                 window.location.href = openHref;
             });
         }
@@ -256,11 +245,13 @@
                 .catch(function(err) {
                     console.error('Failed to load preview:', err);
                     document.getElementById('preview-title').textContent = 'Link Not Found';
+                    document.querySelector('.hero-section').style.display = 'none';
                 });
         } else {
             // Default placeholder state for direct access
             document.getElementById('preview-title').textContent = 'Opening App...';
             document.getElementById('image-loader').style.display = 'none';
+            document.querySelector('.hero-section').style.display = 'none';
         }
     </script>
 </body>
