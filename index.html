@@ -3,191 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opening...</title>
+    <title>Saral App</title>
     <meta id="ios-app-banner" name="apple-itunes-app" content="">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary-blue: #0096EB;
+            --text-dark: #2C3E50;
+            --text-gray: #6E6E73;
+            --bg-light: #FFFFFF;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f5f7;
-            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 24px;
-            color: #1d1d1f;
+            min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
 
-        .card {
-            background: #fff;
-            border-radius: 20px;
+        .phone-container {
             width: 100%;
-            max-width: 400px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06);
-        }
-
-        .preview-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-            background: #e5e5ea;
-        }
-
-        .body {
-            padding: 28px 24px 24px;
-        }
-
-        .app-row {
+            max-width: 480px;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #fff;
+        }
+
+        .header {
+            padding: 40px 20px 20px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 12px;
-            margin-bottom: 20px;
         }
 
-        .app-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            background: #1d1d1f;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 600;
+        .logo-wrapper {
+            width: 56px;
+            height: 56px;
+            background: #fff;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            letter-spacing: -0.5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.03);
+            overflow: hidden;
         }
 
-        .app-meta {
-            min-width: 0;
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .app-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1d1d1f;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .app-label {
-            font-size: 12px;
-            color: #8e8e93;
-            margin-top: 1px;
-        }
-
-        .divider {
-            height: 1px;
-            background: #f2f2f7;
-            margin-bottom: 20px;
-        }
-
-        .content-title {
-            font-size: 17px;
-            font-weight: 600;
-            color: #1d1d1f;
-            line-height: 1.4;
-            margin-bottom: 6px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            line-clamp: 2;
-            overflow: hidden;
-        }
-
-        .content-desc {
-            font-size: 14px;
-            color: #6e6e73;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            line-clamp: 2;
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-
-        .btn-primary {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: #1d1d1f;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: opacity 0.15s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-primary:active { opacity: 0.75; }
-
-        .btn-store {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: #f2f2f7;
-            color: #1d1d1f;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
+            font-size: 20px;
             font-weight: 500;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.15s;
-            -webkit-tap-highlight-color: transparent;
+            color: #000;
         }
 
-        .btn-store:active { background: #e5e5ea; }
+        .hero-section {
+            width: 100%;
+            background: #F8F9FA;
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        .link-web {
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .hero-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            background-size: 200% 100%;
+            animation: shine 1.5s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position-x: -200%; }
+        }
+
+        .content-section {
+            padding: 40px 30px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #34495E;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .description {
+            font-size: 16px;
+            color: var(--text-gray);
+            line-height: 1.5;
+            margin-bottom: 40px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-action {
+            padding: 0 30px 60px;
+        }
+
+        .btn-open {
             display: block;
-            text-align: center;
-            margin-top: 14px;
-            font-size: 13px;
-            color: #8e8e93;
+            width: 100%;
+            background: var(--primary-blue);
+            color: #fff;
             text-decoration: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            transition: transform 0.1s ease, background 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 150, 235, 0.2);
         }
 
-        .link-web:hover { color: #1d1d1f; }
-
-        .actions { display: flex; flex-direction: column; gap: 10px; }
+        .btn-open:active {
+            transform: scale(0.98);
+            background: #0085D1;
+        }
 
         [hidden] { display: none !important; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <img id="preview-image" class="preview-image" src="" alt="" hidden>
-
-        <div class="body">
-            <div class="app-row">
-                <div class="app-icon" id="app-icon">S</div>
-                <div class="app-meta">
-                    <div class="app-name" id="app-name">App</div>
-                    <div class="app-label">Open in app</div>
-                </div>
+    <div class="phone-container">
+        <header class="header">
+            <div class="logo-wrapper">
+                <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/21/5f/f2/215ff210-9206-86f0-b0c1-90c66d69257d/Placeholder.mill/200x200bb-75.webp" alt="Saral App" class="logo-img">
             </div>
+            <h2 class="app-name">Saral App</h2>
+        </header>
 
-            <div class="divider"></div>
-
-            <div class="content-title" id="preview-title"></div>
-            <div class="content-desc" id="preview-desc"></div>
-
-            <div class="actions" id="store-actions"></div>
+        <div class="hero-section">
+            <img id="preview-image" class="hero-image" src="" alt="">
+            <div id="image-loader" class="hero-placeholder"></div>
         </div>
+
+        <main class="content-section">
+            <h1 id="preview-title" class="title"></h1>
+            <p id="preview-desc" class="description"></p>
+        </main>
+
+        <footer class="footer-action">
+            <a href="#" id="open-btn" class="btn-open">Open</a>
+        </footer>
     </div>
 
     <script>
@@ -199,28 +187,29 @@
             var redirectURL = data.redirect_url  || '';
             var iosStore    = data.ios_store_url || '';
             var iosAppID    = data.ios_app_id    || '';
+            var title       = data.title         || 'Saral App';
+            var description = data.description   || '';
+            var imageUrl    = data.image_url     || '';
 
-            document.title = data.title || 'Opening...';
+            document.title = title;
 
             var titleEl = document.getElementById('preview-title');
             var descEl  = document.getElementById('preview-desc');
-            titleEl.textContent = data.title       || '';
-            descEl.textContent  = data.description || '';
+            var imgEl   = document.getElementById('preview-image');
+            var loader  = document.getElementById('image-loader');
+            var openBtn = document.getElementById('open-btn');
 
-            if (!data.title && !data.description) {
-                titleEl.style.display = 'none';
-                descEl.style.display  = 'none';
-            }
+            titleEl.textContent = title;
+            descEl.textContent  = description;
 
-            if (data.image_url) {
-                var img = document.getElementById('preview-image');
-                img.src    = data.image_url;
-                img.hidden = false;
-            }
-
-            if (data.project_name) {
-                document.getElementById('app-icon').textContent = data.project_name.charAt(0).toUpperCase();
-                document.getElementById('app-name').textContent = data.project_name;
+            if (imageUrl) {
+                imgEl.src = imageUrl;
+                imgEl.onload = function() {
+                    imgEl.style.display = 'block';
+                    loader.style.display = 'none';
+                };
+            } else {
+                loader.style.display = 'none';
             }
 
             if (iosAppID && redirectURL) {
@@ -228,72 +217,50 @@
                     'app-id=' + iosAppID + ', app-argument=' + redirectURL);
             }
 
-            // Universal Link URL — tapping from github.io triggers iOS to open the app.
-            // ?nr=1 tells the server not to loop back here if app is not installed.
-            var openHref = universalLinkURL ? universalLinkURL + '?nr=1' : '';
-            var storeActions = document.getElementById('store-actions');
+            var universalLinkURL = (base && code) ? (base + '/' + code) : '';
+            var openHref = universalLinkURL ? universalLinkURL + '?nr=1' : redirectURL;
+            
+            openBtn.href = openHref;
+            
+            openBtn.addEventListener('click', function(e) {
+                if (!universalLinkURL) return; // Follow redirectURL normally
+                
+                e.preventDefault();
+                var appOpened = false;
+                var fallbackTimer = setTimeout(function() {
+                    if (!appOpened) {
+                        window.location.href = iosStore || redirectURL;
+                    }
+                }, 1500);
 
-            if (openHref) {
-                var openBtn = document.createElement('a');
-                openBtn.href      = openHref;
-                openBtn.className = 'btn-primary';
-                openBtn.textContent = 'Open App';
-                openBtn.addEventListener('click', function() {
-                    var appOpened = false;
-                    var fallbackTimer = setTimeout(function() {
-                        if (!appOpened) {
-                            if (iosStore) {
-                                window.location.href = iosStore;
-                            } else {
-                                showFallback(iosStore, redirectURL);
-                            }
-                        }
-                    }, 1500);
-
-                    document.addEventListener('visibilitychange', function onVisibility() {
-                        if (document.hidden) {
-                            appOpened = true;
-                            clearTimeout(fallbackTimer);
-                        }
-                        if (!document.hidden && appOpened) {
-                            document.removeEventListener('visibilitychange', onVisibility);
-                        }
-                    });
+                document.addEventListener('visibilitychange', function onVisibility() {
+                    if (document.hidden) {
+                        appOpened = true;
+                        clearTimeout(fallbackTimer);
+                    }
+                    if (!document.hidden && appOpened) {
+                        document.removeEventListener('visibilitychange', onVisibility);
+                    }
                 });
-                storeActions.appendChild(openBtn);
-            }
+                
+                window.location.href = openHref;
+            });
         }
-
-        function showFallback(storeURL, redirectURL) {
-            var storeActions = document.getElementById('store-actions');
-            // Clear existing buttons
-            storeActions.innerHTML = '';
-
-            if (storeURL) {
-                var a = document.createElement('a');
-                a.href        = storeURL;
-                a.className   = 'btn-primary';
-                a.textContent = 'Download on App Store';
-                storeActions.appendChild(a);
-            }
-
-            if (redirectURL) {
-                var a2 = document.createElement('a');
-                a2.href        = redirectURL;
-                a2.className   = 'link-web';
-                a2.textContent = 'Continue in browser';
-                storeActions.appendChild(a2);
-            }
-        }
-
-        var universalLinkURL = (base && code) ? (base + '/' + code) : '';
 
         if (code && base) {
             fetch(base + '/api/preview/' + code)
                 .then(function(res) { return res.json(); })
                 .then(function(json) {
                     if (json.success && json.data) render(json.data);
+                })
+                .catch(function(err) {
+                    console.error('Failed to load preview:', err);
+                    document.getElementById('preview-title').textContent = 'Link Not Found';
                 });
+        } else {
+            // Default placeholder state for direct access
+            document.getElementById('preview-title').textContent = 'Opening App...';
+            document.getElementById('image-loader').style.display = 'none';
         }
     </script>
 </body>
