@@ -241,7 +241,13 @@
                 openBtn.addEventListener('click', function() {
                     var appOpened = false;
                     var fallbackTimer = setTimeout(function() {
-                        if (!appOpened) showFallback(iosStore, redirectURL);
+                        if (!appOpened) {
+                            if (iosStore) {
+                                window.location.href = iosStore;
+                            } else {
+                                showFallback(iosStore, redirectURL);
+                            }
+                        }
                     }, 1500);
 
                     document.addEventListener('visibilitychange', function onVisibility() {
