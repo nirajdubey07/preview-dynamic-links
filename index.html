@@ -39,6 +39,7 @@
             flex-direction: column;
             min-height: 100vh;
             background: #fff;
+            position: relative;
         }
 
         .header {
@@ -104,9 +105,10 @@
         }
 
         .content-section {
-            padding: 40px 30px;
+            padding: 40px 30px 20px;
             text-align: center;
-            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .title {
@@ -155,15 +157,25 @@
             display: none !important;
         }
 
-        .phone-container.no-image .content-section {
-            padding-top: 10px;
-        }
-
         .phone-container.no-image .header {
             padding-bottom: 24px;
         }
 
-        [hidden] { display: none !important; }
+        .phone-container.no-image .content-section {
+            padding-top: 20px;
+        }
+
+        [hidden] { 
+            display: none !important; 
+        }
+
+        .description[hidden] {
+            margin-bottom: 0;
+        }
+
+        .title[hidden] {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -180,9 +192,9 @@
             <div id="image-loader" class="hero-placeholder"></div>
         </div>
 
-        <main class="content-section">
-            <h1 id="preview-title" class="title"></h1>
-            <p id="preview-desc" class="description"></p>
+        <main id="content-section" class="content-section">
+            <h1 id="preview-title" class="title" hidden></h1>
+            <p id="preview-desc" class="description" hidden></p>
         </main>
 
         <footer class="footer-action">
@@ -199,20 +211,32 @@
             var redirectURL = data.redirect_url  || '';
             var iosStore    = data.ios_store_url || '';
             var iosAppID    = data.ios_app_id    || '';
-            var title       = data.title         || 'Saral App';
+            var title       = data.title         || '';
             var description = data.description   || '';
             var imageUrl    = data.image_url     || '';
 
-            document.title = title;
+            document.title = title || 'Saral App';
 
             var titleEl = document.getElementById('preview-title');
             var descEl  = document.getElementById('preview-desc');
             var imgEl   = document.getElementById('preview-image');
             var loader  = document.getElementById('image-loader');
             var openBtn = document.getElementById('open-btn');
+            var container = document.querySelector('.phone-container');
 
-            titleEl.textContent = title;
-            descEl.textContent  = description;
+            if (title) {
+                titleEl.textContent = title;
+                titleEl.hidden = false;
+            } else {
+                titleEl.hidden = true;
+            }
+
+            if (description) {
+                descEl.textContent = description;
+                descEl.hidden = false;
+            } else {
+                descEl.hidden = true;
+            }
 
             if (imageUrl) {
                 imgEl.src = imageUrl;
@@ -220,13 +244,18 @@
                     imgEl.style.display = 'block';
                     loader.style.display = 'none';
                 };
+                imgEl.onerror = function() {
+                    container.classList.add('no-image');
+                };
             } else {
-                document.querySelector('.phone-container').classList.add('no-image');
+                container.classList.add('no-image');
             }
 
             if (iosAppID && redirectURL) {
-                document.getElementById('ios-app-banner').setAttribute('content',
-                    'app-id=' + iosAppID + ', app-argument=' + redirectURL);
+                var banner = document.getElementById('ios-app-banner');
+                if (banner) {
+                    banner.setAttribute('content', 'app-id=' + iosAppID + ', app-argument=' + redirectURL);
+                }
             }
 
             var universalLinkURL = (base && code) ? (base + '/' + code) : '';
@@ -234,34 +263,29 @@
             
             openBtn.href = openHref;
             
-            // By NOT calling e.preventDefault(), we allow the browser to handle the 
-            // Universal Link naturally, which is the only way to bypass the 
-            // "Open in 'App'?" system prompt on iOS and Android.
-            openBtn.addEventListener('click', function(e) {
-                // If we're already using a Universal Link (HTTPS), let the browser do its thing.
+            openBtn.onclick = function(e) {
                 if (universalLinkURL) return; 
-
-                // Fallback for custom schemes or other redirects
                 e.preventDefault();
                 window.location.href = openHref;
-            });
+            };
         }
 
         if (code && base) {
             fetch(base + '/api/preview/' + code)
                 .then(function(res) { return res.json(); })
                 .then(function(json) {
-                    if (json.success && json.data) render(json.data);
+                    if (json.success && json.data) {
+                        render(json.data);
+                    } else {
+                        throw new Error('Data error');
+                    }
                 })
                 .catch(function(err) {
                     console.error('Failed to load preview:', err);
-                    document.getElementById('preview-title').textContent = 'Link Not Found';
-                    document.querySelector('.phone-container').classList.add('no-image');
+                    render({ title: 'Link Not Found', description: 'This link may have expired or is invalid.' });
                 });
         } else {
-            // Default placeholder state for direct access
-            document.getElementById('preview-title').textContent = 'Opening App...';
-            document.querySelector('.phone-container').classList.add('no-image');
+            render({ title: 'Opening App...', description: 'Please wait while we redirect you.' });
         }
     </script>
 </body>
